@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FREE Time</title>
+<style>
+:root{color-scheme:dark;--bg:#090c11;--panel:#111722;--text:#f6f7fb;--muted:#9da7b8;--line:rgba(255,255,255,.09);--p:#7b8cff;--g:#5fd7b3;font-family:Inter,system-ui,sans-serif}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 10% 0,rgba(123,140,255,.18),transparent 30%),var(--bg);color:var(--text)}
+button,input,select{font:inherit}.app{max-width:1180px;margin:auto;padding:20px}.top{display:flex;justify-content:space-between;align-items:end;gap:16px}.brand{font-size:28px;font-weight:900}.brand span{color:var(--p)}.sub{color:var(--muted);margin-top:5px}
+.grid{display:grid;grid-template-columns:390px 1fr;gap:16px;margin-top:18px}.card{background:rgba(17,23,34,.92);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 20px 55px rgba(0,0,0,.3)}
+h2{margin:0 0 14px}.group{margin:13px 0}.label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px}.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}.seg button{padding:11px;border-radius:11px;border:1px solid var(--line);background:#121925;color:#aab4c3}.seg button.on{color:white;border-color:var(--p);background:rgba(123,140,255,.18)}
+.times,.state{display:grid;grid-template-columns:1fr 1fr;gap:8px}.state{grid-template-columns:1fr 1fr 1fr}.field{display:grid;gap:5px}.field label{font-size:11px;color:var(--muted)}input,select{background:#121925;color:white;border:1px solid var(--line);border-radius:10px;padding:10px;width:100%}
+.reassure{margin:14px 0;padding:13px;border-radius:13px;background:rgba(123,140,255,.09);border:1px solid rgba(123,140,255,.18)}.reassure small{display:block;color:var(--muted);margin-top:4px}
+.primary{width:100%;padding:13px;border:0;border-radius:12px;color:white;font-weight:800;background:linear-gradient(135deg,#6674ff,#8e70ff)}
+.plan{border:1px solid var(--line);border-radius:15px;padding:14px;margin-bottom:10px;display:grid;grid-template-columns:1fr auto;gap:12px}.plan h3{margin:0 0 6px}.meta,.why,.unc{font-size:12px;color:var(--muted);line-height:1.45}.score{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:#16202d;font-weight:900;color:var(--g)}.pills{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.pill{font-size:10px;padding:5px 8px;background:rgba(255,255,255,.05);border-radius:999px}.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.actions button{border:1px solid var(--line);background:rgba(255,255,255,.04);color:#d9dfea;border-radius:9px;padding:7px 9px}
+.notice{padding:12px;border:1px solid rgba(95,215,179,.2);background:rgba(95,215,179,.07);border-radius:12px;color:#c9f5e9;font-size:12px;margin-bottom:12px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.76);display:grid;place-items:center;padding:18px}.modal.hidden{display:none}.modalbox{width:min(620px,100%);background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:20px}.check{display:flex;gap:9px;padding:10px;border:1px solid var(--line);border-radius:11px;margin:8px 0}.check span{color:var(--muted);font-size:12px}
+@media(max-width:850px){.grid{grid-template-columns:1fr}.top{align-items:start;flex-direction:column}.state{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top"><div><div class="brand"><span>FREE</span> Time</div><div class="sub">Feeling Relieved Experience Engine</div></div><div id="status" class="sub">Checking system…</div></div>
+  <div class="grid">
+    <section class="card">
+      <h2>Build my Free Time</h2>
+      <div class="field"><label>Judge demo persona</label><select id="persona"><option value="maria">Maria — calm, pet access</option><option value="james">James — active, adventurous</option><option value="lee">Lee — mobility and quiet</option></select></div>
+      <div class="group" data-key="social"><div class="label">Who</div><div class="seg"><button data-v="Alone">Alone</button><button class="on" data-v="Together">Together</button></div></div>
+      <div class="group" data-key="setting"><div class="label">Where</div><div class="seg"><button class="on" data-v="Inside">Inside</button><button data-v="Outside">Outside</button></div></div>
+      <div class="group" data-key="cost"><div class="label">Cost</div><div class="seg"><button data-v="Free">Free</button><button class="on" data-v="Pay">Pay</button></div></div>
+      <div class="times"><div class="field"><label>Start</label><input id="start" type="time" value="13:00"></div><div class="field"><label>Back by</label><input id="end" type="time" value="15:00"></div></div>
+      <div class="state" style="margin-top:8px"><div class="field"><label>Energy</label><select id="energy"><option>Low</option><option selected>Medium</option><option>High</option></select></div><div class="field"><label>Stimulation</label><select id="stim"><option selected>Calm</option><option>Normal</option><option>Exciting</option></select></div><div class="field"><label>Pet</label><select id="pet"><option selected>Yes</option><option>No</option></select></div></div>
+      <div class="reassure"><strong id="summary">Together · Inside · Pay</strong><small>Feel good about what you do next.</small></div>
+      <button class="primary" id="find">Find My Free Time</button>
+    </section>
+    <section class="card">
+      <div class="notice">Hard constraints are enforced before AI personalization or anonymous-neighbor scoring.</div>
+      <h2>Best-fit plans</h2>
+      <div id="results"><div class="sub">Choose a persona and generate recommendations.</div></div>
+    </section>
+  </div>
+</div>
+
+<div class="modal hidden" id="modal"><div class="modalbox"><h2>And don’t forget…</h2><div id="checks"></div><button class="primary" id="ready">I’m ready</button></div></div>
+
+<script>
+const state={social:"Together",setting:"Inside",cost:"Pay"};
+document.querySelectorAll(".group").forEach(g=>g.querySelectorAll("button").forEach(b=>b.onclick=()=>{g.querySelectorAll("button").forEach(x=>x.classList.remove("on"));b.classList.add("on");state[g.dataset.key]=b.dataset.v;summary.textContent=`${state.social} · ${state.setting} · ${state.cost}`;}));
+fetch("/api/health").then(r=>r.json()).then(x=>status.textContent=x.aiEnabled?`GPT-5.6 connected`:`Demo mode — add API key for GPT-5.6`);
+find.onclick=async()=>{find.disabled=true;find.textContent="Verifying fit…";const body={personaId:persona.value,request:{...state,start:start.value,end:end.value,bufferMinutes:15,energy:energy.value,stimulation:stim.value,petComing:pet.value==="Yes"}};const r=await fetch("/api/recommend",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});const data=await r.json();render(data);find.disabled=false;find.textContent="Find My Free Time"};
+function render(data){const explains=Object.fromEntries((data.ai?.plans||[]).map(x=>[x.id,x]));results.innerHTML=(data.accepted||[]).map(p=>{const a=explains[p.id]||{};return `<article class="plan"><div><h3>${p.title}</h3><div class="meta">${p.social} · ${p.setting} · ${p.costClass}</div><div class="pills"><span class="pill">${p.outboundMinutes} min away</span><span class="pill">${p.activityMinutes} min activity</span><span class="pill">${p.confidence} confidence</span></div><div class="why">${a.explanation||p.rationale}</div><div class="unc">Uncertainty: ${p.uncertainty}</div><div class="actions"><button onclick='choose(${JSON.stringify(p.id)},${JSON.stringify(p.title)},${JSON.stringify(a.dontForget||[])})'>Choose plan</button><button onclick='feedback(${JSON.stringify(p.category)},"liked")'>👍 Good fit</button><button onclick='feedback(${JSON.stringify(p.category)},"too_loud")'>Too loud</button><button onclick='feedback(${JSON.stringify(p.category)},"chair_unsuitable")'>Chair issue</button></div></div><div class="score">${p.fitScore}%</div></article>`}).join("")||`<div class="sub">No plans passed all hard constraints. Change one selection or time window.</div>`}
+window.feedback=async(category,type)=>{await fetch("/api/feedback",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({personaId:persona.value,event:{type,category}})});alert("Feedback saved. Generate again to see the ranking update.")};
+window.choose=(id,title,items)=>{const defaultItems=["Wallet, keys, and phone","Dress for current weather and venue","Leave with the protected return buffer","Complete any saved errand on the return route"];checks.innerHTML=[...items,...defaultItems].slice(0,6).map(x=>`<label class="check"><input type="checkbox"><div><strong>${x}</strong><span>Personalized from the plan, profile, route, conditions, and saved errands.</span></div></label>`).join("");modal.classList.remove("hidden")};
+ready.onclick=()=>modal.classList.add("hidden");
+modal.onclick=e=>{if(e.target===modal)modal.classList.add("hidden")};
+</script>
+</body></html>
