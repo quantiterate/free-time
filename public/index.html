@@ -44,6 +44,9 @@ h2{margin:0 0 14px}.group{margin:13px 0}.label{font-size:11px;color:var(--muted)
 <div class="modal hidden" id="modal"><div class="modalbox"><h2>And don’t forget…</h2><div id="checks"></div><button class="primary" id="ready">I’m ready</button></div></div>
 
 <script>
+// window.find and window.status are native browser properties, so the implicit
+// element-id globals never form for these two ids — bind them explicitly.
+const find=document.getElementById("find"), status=document.getElementById("status");
 const state={social:"Together",setting:"Inside",cost:"Pay"};
 document.querySelectorAll(".group").forEach(g=>g.querySelectorAll("button").forEach(b=>b.onclick=()=>{g.querySelectorAll("button").forEach(x=>x.classList.remove("on"));b.classList.add("on");state[g.dataset.key]=b.dataset.v;summary.textContent=`${state.social} · ${state.setting} · ${state.cost}`;}));
 fetch("/api/health").then(r=>r.json()).then(x=>status.textContent=x.aiEnabled?`GPT-5.6 connected`:`Demo mode — add API key for GPT-5.6`);
