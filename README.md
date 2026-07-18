@@ -43,9 +43,22 @@ Node.js 20 or newer is required.
 npm test
 ```
 
+## Live demo
+
+The app is deployed on Cloudflare Workers:
+
+**https://free-time.matthewjgossjr.workers.dev**
+
+The same engine runs in two interchangeable ways:
+
+- `server.mjs` — plain Node.js/Express server (local development, judges cloning the repo)
+- `worker.mjs` — Cloudflare Workers entry (production). Feedback-updated profiles persist in Workers KV because Worker isolates are ephemeral. Deploy with `npx wrangler deploy`; set the API key with `npx wrangler secret put OPENAI_API_KEY`.
+
+Both share `lib/recommend.mjs` (candidate filtering, ranking, and the GPT-5.6 explanation layer) and the deterministic engine in `lib/engine.mjs`.
+
 ## GPT-5.6
 
-The server calls the OpenAI Responses API from `server.mjs`. The model provides nuanced, non-diagnostic explanations and a personalized readiness checklist. It does **not** enforce time arithmetic or hard constraints.
+The server calls the OpenAI Responses API from `lib/recommend.mjs`. The model provides nuanced, non-diagnostic explanations and a personalized readiness checklist. It does **not** enforce time arithmetic or hard constraints.
 
 ## Deterministic safeguards
 
