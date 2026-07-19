@@ -99,6 +99,23 @@ The prototype uses synthetic personas. Production design principles:
 - Wearable integrations are architectural, not production-certified.
 - This is not a medical device or clinical decision system.
 
+## How Codex and GPT-5.6 built this
+
+**GPT-5.6** does the cognitive work in two places at runtime:
+
+1. **Natural-language intake** (`/api/intake`): free text like *"I've got about two hours, my knee is acting up, and the dog's coming"* is structured by GPT-5.6 into a typed request — duration, energy, stimulation, pet, and conservative functional-constraint hints from a fixed whitelist. The model interprets; the deterministic engine enforces. Parsed hints become temporary hard constraints via `applyIntakeHints` and never bypass the filter.
+2. **Explanation layer**: GPT-5.6 (OpenAI Responses API) writes the plain-language explanation, uncertainty framing, and the personalized "And don't forget…" checklist for each plan. It never performs time arithmetic or constraint enforcement, and the app fails soft to deterministic output if the model is unavailable.
+
+**Codex** (CLI, in this repository) built the feature layer on top of the initial engine scaffold:
+
+- the `/api/intake` endpoint and the GPT-5.6 intake parser with whitelist validation and clamping,
+- `applyIntakeHints` in the engine, with its automated test,
+- the explainability UI: per-plan score-dimension bars, the "Why not the others?" rejected-plans panel with recorded reasons, and the visible profile-update notes after feedback,
+- the fourth persona (Priya) and six additional venues chosen to exercise the constraint engine (including deliberately failing cases),
+- interface fixes and polish.
+
+Key decisions — the deterministic-filter-before-AI architecture, the whitelist boundary on model-inferred constraints, and what the app must *not* claim (no diagnosis, no medical fitness) — were product calls made by the author and enforced in code. Deployment (Cloudflare Workers + KV) and release verification were automated with Claude Code.
+
 ## Repository map
 
 - `server.mjs` — Express API and OpenAI integration

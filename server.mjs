@@ -1,8 +1,8 @@
 
 import express from "express";
 import { personas } from "./lib/data.mjs";
-import { applyFeedback } from "./lib/engine.mjs";
-import { localRecommend, aiExplain } from "./lib/recommend.mjs";
+import { applyFeedback, applyIntakeHints } from "./lib/engine.mjs";
+import { localRecommend, aiExplain, parseIntake } from "./lib/recommend.mjs";
 
 const app = express();
 app.use(express.json({limit:"1mb"}));
@@ -12,10 +12,23 @@ const profiles = new Map(Object.entries(personas).map(([k,v])=>[k, structuredClo
 
 app.get("/api/personas",(req,res)=>res.json(Object.values(personas).map(({id,name,summary})=>({id,name,summary}))));
 
+app.post("/api/intake", async (req,res)=>{
+  try {
+    const parsed = await parseIntake(req.body.text, req.body.currentRequest ?? {}, {
+      apiKey: process.env.OPENAI_API_KEY,
+      model: process.env.OPENAI_MODEL
+    });
+    res.json(parsed);
+  } catch (err) {
+    res.status(err.message.includes("OPENAI_API_KEY") ? 503 : 500).json({error:err.message});
+  }
+});
+
 app.post("/api/recommend", async (req,res)=>{
   try {
     const {personaId="maria", request} = req.body;
-    const profile = profiles.get(personaId) ?? profiles.get("maria");
+    const storedProfile = profiles.get(personaId) ?? profiles.get("maria");
+    const profile = applyIntakeHints(storedProfile, request.constraintHints);
     const result = localRecommend(profile, request);
     const ai = await aiExplain(profile, request, result, {
       apiKey: process.env.OPENAI_API_KEY,

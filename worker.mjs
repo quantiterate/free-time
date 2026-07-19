@@ -3,8 +3,8 @@
 // app via server.mjs — see README. Feedback-updated profiles persist in KV
 // because Worker isolates are ephemeral.
 import { personas } from "./lib/data.mjs";
-import { applyFeedback } from "./lib/engine.mjs";
-import { localRecommend, aiExplain } from "./lib/recommend.mjs";
+import { applyFeedback, applyIntakeHints } from "./lib/engine.mjs";
+import { localRecommend, aiExplain, parseIntake } from "./lib/recommend.mjs";
 
 const json = (data, status = 200) =>
   new Response(JSON.stringify(data), {status, headers: {"content-type": "application/json"}});
@@ -25,9 +25,23 @@ export default {
         return json(Object.values(personas).map(({id,name,summary})=>({id,name,summary})));
       }
 
+      if (path === "/api/intake" && request.method === "POST") {
+        const {text, currentRequest = {}} = await request.json();
+        try {
+          const parsed = await parseIntake(text, currentRequest, {
+            apiKey: env.OPENAI_API_KEY,
+            model: env.OPENAI_MODEL
+          });
+          return json(parsed);
+        } catch (err) {
+          return json({error:err.message}, err.message.includes("OPENAI_API_KEY") ? 503 : 500);
+        }
+      }
+
       if (path === "/api/recommend" && request.method === "POST") {
         const {personaId = "maria", request: req} = await request.json();
-        const profile = await getProfile(env, personaId);
+        const storedProfile = await getProfile(env, personaId);
+        const profile = applyIntakeHints(storedProfile, req.constraintHints);
         const result = localRecommend(profile, req);
         const ai = await aiExplain(profile, req, result, {
           apiKey: env.OPENAI_API_KEY,

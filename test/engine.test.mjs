@@ -1,7 +1,7 @@
 
 import test from "node:test";
 import assert from "node:assert/strict";
-import {feasible, scoreCandidate, applyFeedback, minutesBetween} from "../lib/engine.mjs";
+import {feasible, scoreCandidate, applyFeedback, applyIntakeHints, minutesBetween} from "../lib/engine.mjs";
 import {personas, candidates} from "../lib/data.mjs";
 
 test("minutesBetween computes a two-hour window",()=>assert.equal(minutesBetween("13:00","15:00"),120));
@@ -26,4 +26,12 @@ test("chair feedback adds reliable seating hard constraint",()=>{
   const updated=applyFeedback(personas.james,{type:"chair_unsuitable"});
   assert.equal(updated.requiresSeating,true);
   assert.ok(updated.hardConstraints.includes("reliable_seating"));
+});
+
+test("intake hints become deterministic temporary constraints",()=>{
+  const updated=applyIntakeHints(personas.james,["limited_walking","reliable_seating"]);
+  assert.equal(updated.maxWalkingMiles,0.5);
+  assert.equal(updated.requiresSeating,true);
+  assert.ok(updated.hardConstraints.includes("reliable_seating"));
+  assert.equal(personas.james.requiresSeating,false);
 });
